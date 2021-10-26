@@ -103,4 +103,4 @@ dist
 # TernJS port file
 .tern-port
 
-.idea/
+.idea/!/Homework 3/access.log
