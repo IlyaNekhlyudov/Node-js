@@ -7,8 +7,6 @@ if (isNaN(min) || isNaN(max)) return console.error(color.red('Введите к�
 else if (min < 0 || max < 0) return console.error(color.red('Числа должны быть положительными.'));
 else if (max <= min) return console.error(color.red('Второе число должно быть больше первого.'))
 
-console.log(color.green(min), color.red(max));
-
 // поиск простых чисел в заданном диапазоне
 
 let count = 0;
@@ -26,6 +24,7 @@ if (!result) {
 }
 
 function isPrime(num) {
+    if (num === 0 || num === 1) return false;
     for (let j = 2; j < num; j++) {
         if (num % j === 0) return false;
     }
