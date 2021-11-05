@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Socket App</title>
+    <script src="..\node_modules\socket.io-client\dist\socket.io.js"></script>
+</head>
+<body>
+<div class="name">
+    <p>Это веб-чат, для входа заполните поля ниже</p>
+    <input type="text" id="name" placeholder="Введите никнейм">
+    <input type="button" id="send-name" value="Отправить">
+</div>
+
+<div class="chat" hidden="true">
+    <div style="overflow: auto; width: 300px; height: 200px;" class="messages"></div>
+    <div style="margin-top: 5px">
+        <input type="text" id="message" placeholder="Введите сообщение">
+        <input type="button" id="send-message" value="Отправить">
+    </div>
+    <p style="margin-top: 50px;" id="online">Онлайн: 0</p>
+</div>
+
+<script>
+    const socket = io('http://localhost:3000');
+
+    let name = document.getElementById('name');
+    let message = document.getElementById('message');
+    let nameBlock = document.getElementsByClassName("name")[0];
+    let chatBlock = document.getElementsByClassName("chat")[0];
+    let messagesBlock = document.getElementsByClassName("messages")[0];
+    let online = document.getElementById('online');
+    let chatText = '';
+
+    document.getElementById("send-name").onclick = () => {
+        if (name.value === '') name.style.outline = '1px solid red';
+        else {
+            nameBlock.hidden = true;
+            chatBlock.hidden = false;
+            socket.emit('set username', { name: name.value });
+        }
+    }
+
+    document.getElementById("send-message").onclick = () => {
+        if (message.value === '') message.style.outline = '1px solid red';
+        else {
+            message.style.outline = 'none';
+            socket.emit('send message', {message: message.value});
+        }
+    }
+
+    socket.on("message", (data) => {
+        chatText = `<p>${data.text}</p>`;
+        messagesBlock.insertAdjacentHTML('beforeend', chatText);
+        online.innerHTML = `Онлайн: ${data.online}`;
+    });
+
+</script>
+</body>
+</html>
